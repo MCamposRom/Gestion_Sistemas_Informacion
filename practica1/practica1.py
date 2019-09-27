@@ -5,36 +5,64 @@ class Jugador:
     def __init__(self, nombre):
         self.nombre=nombre
         self.intentos=0
+        
+    def get_nombre(self):
+        return self.nombre
+    
+    def get_intentos(self):
+        return self.intentos
+    
+    def increment_intentos(self):
+        self.intentos += 1
+    
+    def initialize_intentos(self):
+        self.intentos=0
 
 ##Clase maquina
 class Maquina:
     def __init__(self):
         self.intentos=0
+        
+    def get_intentos(self):
+        return self.intentos
+    
+    def increment_intentos(self):
+        self.intentos += 1
+    
+    def initialize_intentos(self):
+        self.intentos=0
             
 ##Clase partida
 class Partida:
+    def __init__(self):
+        self.maquina=Maquina()
+        self.jugador=Jugador(self.nameJugador())
+        
+    def nameJugador(self):
+        nombre_jugador=input("¡Hola! ¿Como te llamas?\n")
+        return nombre_jugador
     
     def juegaPartida(self):
-        maquina = Maquina()
-        nombre_jugador=input("¡Hola! ¿Como te llamas?\n")
-        jugador=Jugador(nombre_jugador)
         repetir="S"
         while repetir=="S":
-            print("Bueno, {}, estoy pensando en un número entre 1 y 100. Intenta adivinarlo.".format(jugador.nombre))
-            jugador.intentos=self.adivinaJugador()
-            print("¡Buen trabajo, {}! ¡Has adivinado mi número en {} intentos! Es tu turno.\n".format(jugador.nombre, jugador.intentos))
-            maquina.intentos=self.adivinaMaquina()
-            if jugador.intentos>maquina.intentos:
-                print("\nYo gano. He acertado en {} intentos.".format(maquina.intentos))
-            elif jugador.intentos<maquina.intentos:
-                print("\nTu ganas. Has acertado en {} intentos.".format(jugador.intentos))
+            print("Bueno, {}, estoy pensando en un número entre 1 y 100. Intenta adivinarlo.".format(self.jugador.get_nombre()))
+            self.adivinaJugador(self.jugador)
+            print("¡Buen trabajo, {}! ¡Has adivinado mi número en {} intentos! Es tu turno.\n".format(self.jugador.get_nombre(), self.jugador.get_intentos()))
+            self.adivinaMaquina(self.maquina)
+            intentos_jugador=self.jugador.get_intentos()
+            intentos_maquina=self.maquina.get_intentos()
+            if intentos_jugador>intentos_maquina:
+                print("\nYo gano. He acertado en {} intentos.".format(intentos_maquina))
+            elif intentos_jugador<intentos_maquina:
+                print("\nTu ganas. Has acertado en {} intentos.".format(intentos_jugador))
             else:
-                print("\nHemos empatado. Ambos hemos acertado en {} intentos.".format(aquina.intentos))
+                print("\nHemos empatado. Ambos hemos acertado en {} intentos.".format(intentos_maquina))
             repetir = input("\nQuieres seguir jugando? S/N ")
         
     ##El jugador adivina el numero de la maquina
-    def adivinaJugador():
-        intentos = 1;
+    def adivinaJugador(self,jugador):
+        jugador.initialize_intentos()
+        jugador.increment_intentos()
         a=getRandom(0,100)
         repeat = 'y'
         while repeat == 'y':
@@ -45,42 +73,39 @@ class Partida:
                 else:
                     repeat = 'n'
                     while eval(b)!=a:
-                        intentos += 1
+                        jugador.increment_intentos()
                         if eval(b)<a:
                             print("Mi número es mayor")
                         else:
                             print("Mi número es menor")  
                         b=input()
-                    if eval(b) == a:
-                        return intentos
             else:
                 print("Error: No me has dado un número, por favor introduzca un número.")
         
         
     ##El ordenador adivina el numero del jugador
-    def adivinaMaquina():
+    def adivinaMaquina(self,maquina):
         x=0
         y=100
         r=' '
-        intentos=0
+        maquina.initialize_intentos()
         while r != 'Correcto':
-            intentos += 1
+            maquina.increment_intentos()
             if x==y:
                 r=input('El número que has pensado es el {}.\nMayor/Menor/Correcto? '.format(x))
-                return intentos
             else:
                 a=getRandom(x,y)
                 repeat = 'y'
                 while repeat == 'y':
                     r=input('El número que has pensado es el {}.\nMayor/Menor/Correcto? '.format(a))
-                    if r=='Mayor':
+                    if r=='Correcto':
+                        repeat='n'
+                    elif r=='Mayor':
                         x=a+1
                         repeat='n'
                     elif r=='Menor':
                         y=a-1
                         repeat='n'
-                    elif r=='Correcto':
-                        return intentos
                     else:
                         print('Error: La respuesta no es valida.')
 
@@ -93,5 +118,5 @@ def getRandom(x,y):
 
 ##Main - Estructura del juego
 if __name__ == '__main__':
-    partida=Partida
-    partida.juegaPartida(partida)
+    partida=Partida()
+    partida.juegaPartida()

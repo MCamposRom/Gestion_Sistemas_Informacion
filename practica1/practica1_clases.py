@@ -45,8 +45,6 @@ class Partida:
     def juegaPartida(self):
         repetir="S"
         while repetir=="S":
-            name=self.jugador.get_nombre()
-            print(name)
             print("Bueno, {}, estoy pensando en un número entre 1 y 100. Intenta adivinarlo.".format(self.jugador.get_nombre()))
             self.adivinaJugador(self.jugador)
             print("¡Buen trabajo, {}! ¡Has adivinado mi número en {} intentos! Es tu turno.\n".format(self.jugador.get_nombre(), self.jugador.get_intentos()))

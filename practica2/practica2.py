@@ -30,6 +30,12 @@ def EscribirAhorros(cantidad,fecha):
     with open('ahorros.txt','a+') as file:
         file.write('{}, {}\n'.format(fecha, int(cantidad)))
 
+                
+##En caso de error con la base de la API (no es en euros) describe el error en el fichero ahorros.txt
+def ErrorAhorros():
+    with open('ahorros.txt','a+') as file:
+        file.write('Erro: la base de la API ya no es EUR, no se puede ejecutar correctamente su programa.\n')
+
 
 ##Estructura del programa que utiliza las funciones y suma todas las catidades convertidas a euros
 if __name__ == '__main__':
@@ -37,10 +43,13 @@ if __name__ == '__main__':
     API.get_data()
     MiDinero = LeerDivisas()
     cantidad_total = 0
-    for element in MiDinero:
-        if element[0] == API.data['base']:
-            cantidad_total += int(element[1])
-        else:
-            if element[0] in API.data['rates']:
-                cantidad_total += + API.convert(int(element[1]),element[0])
-    EscribirAhorros(cantidad_total,API.data['date'])
+    if API.data['base'] != 'EUR':
+        ErrorAhorros()
+    else:
+        for element in MiDinero:
+            if element[0] == API.data['base']:
+                cantidad_total += int(element[1])
+            else:
+                if element[0] in API.data['rates']:
+                    cantidad_total += + API.convert(int(element[1]),element[0])
+        EscribirAhorros(cantidad_total,API.data['date'])

@@ -30,6 +30,12 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SILENCED_SYSTEM_CHECKS = [
+    'admin.E408',
+    'admin.E409',
+    'admon.E410',
+]
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
